@@ -57,7 +57,7 @@ for i_episode in range(num_episodes):
     # Update the target network, copying all weights and biases in DQN
     if i_episode % TARGET_UPDATE == 0:
         agent.update_target_net()
-        agent.save()
+        agent.save(filter='tu', model_name='attack.model')
 
 print('Complete')
 env.close()

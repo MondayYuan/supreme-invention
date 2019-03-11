@@ -166,10 +166,24 @@ class DQNAgent():
     def update_target_net(self):
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
-    def save(self):
-        torch.save(self.policy_net.state_dict(), "ICRA.model")
+    def save(self, filter=None, model_name='ICRA.model'):
+        torch.save(self.net_state_filter(self.policy_net.state_dict(), filter), model_name)
 
-    def load(self):
+    def load(self, model_name='ICRA.model'):
         self.policy_net.load_state_dict(torch.load(
-            "ICRA.model", map_location=self.device))
+            model_name, map_location=self.device), strict=False)
         self.target_net.load_state_dict(self.policy_net.state_dict())
+
+    def net_state_filter(self, state_dict, filter=None):
+        if(filter == 'sj'):
+            new_dict = dict()
+            for k, v in state_dict.items():
+                if('sj' in k): new_dict[k] = v
+            return new_dict
+        elif(filter == 'tu'):
+            new_dict = dict()
+            for k, v in state_dict.items():
+                if ('tu' in k): new_dict[k] = v
+            return new_dict
+        else:
+            return state_dict
