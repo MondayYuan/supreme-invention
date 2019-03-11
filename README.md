@@ -13,7 +13,7 @@
 ### Anaconda
 
 ```
-conda create -f Gym.yaml
+conda env create -f Gym.yaml
 conda activate Gym
 ```
 
