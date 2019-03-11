@@ -13,7 +13,7 @@ from Agent.HandAgent import HandAgent
 
 TARGET_UPDATE = 10
 
-seed = 124
+seed = 14 
 torch.random.manual_seed(seed)
 torch.cuda.random.manual_seed(seed)
 np.random.seed(seed)
@@ -44,7 +44,7 @@ for i_episode in range(num_episodes):
             action[4] = +1.0
         else:
             action[4] = 0.0
-        action = agent.select_action(state)
+        action = agent.select_action(state, True)
 
         next_state, reward, done, info = env.step(action)
 
