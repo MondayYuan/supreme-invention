@@ -107,7 +107,6 @@ dependencies:
   - pysocks=1.6.8=py37_0
   - python=3.7.1=h0371630_7
   - python-dateutil=2.8.0=py37_0
-  - pytorch-cpu=1.0.1=py3.7_cpu_2
   - pytz=2018.9=py37_0
   - pyzmq=18.0.0=py37he6710b0_0
   - qt=5.9.7=h5867ecd_1
