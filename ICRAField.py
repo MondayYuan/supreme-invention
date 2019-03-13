@@ -21,6 +21,8 @@ from Referee.ICRAContactListener import ICRAContactListener
 from SupportAlgorithm.DetectCallback import detectCallback
 from SupportAlgorithm.MoveAction import MoveAction
 
+import cv2
+
 STATE_W = 96   # less than Atari 160x192
 STATE_H = 96
 VIDEO_W = 600
@@ -91,11 +93,20 @@ class ICRAField(gym.Env, EzPickle):
 
         self.robots = {}
 
+        while(True):
+            a_0, x_0, y_0 = -np.pi/2 + np.pi * random.random(), 0.5+7*random.random(), 0.5+4*random.random()
+            a_1, x_1, y_1 = -np.pi/2 + np.pi * random.random(), 0.5+7*random.random(), 0.5+4*random.random()
+            if (ICRAMap().check_coincident_with_obstacle(x_0, y_0)
+                     and ICRAMap().check_coincident_with_obstacle(x_1, y_1)):
+                break
+
         self.robots['robot_0'] = Robot(
-            self.world, -np.pi/2, 0.5, 4.5,
+            self.world, a_0, x_0, y_0,
+            # self.world, -np.pi / 2, -0.1, 4.5,
             'robot_0', 0, 'red', COLOR_RED)
+        # cv2.waitKey()
         self.robots['robot_1'] = Robot(
-            self.world, -np.pi / 2, 0.5+7*random.random(), 0.5+4*random.random(),
+            self.world, a_1, x_1, y_1,
             'robot_1', 1, 'blue', COLOR_BLUE)
 
         self.map = ICRAMap(self.world)
@@ -113,6 +124,8 @@ class ICRAField(gym.Env, EzPickle):
         }
         self.actions["robot_0"] = None
         self.actions["robot_1"] = None
+
+        # return True
 
         return self.step(None)[0]
 
@@ -415,7 +428,7 @@ if __name__ == "__main__":
     env.viewer.window.on_key_press = key_press
     env.viewer.window.on_key_release = key_release
     while True:
-        env.reset()
+        if(not env.reset()): continue
         total_reward = 0.0
         steps = 0
         restart = False

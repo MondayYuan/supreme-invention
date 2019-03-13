@@ -95,6 +95,16 @@ class ICRAMap:
 
         cv2.imwrite(self.image_file, img)
 
+    def check_coincident_with_obstacle(self, x, y):
+        MIN_DISTANCE = 0.29
+        flag = True
+        for p, b in zip(BORDER_POS + OBSTACLE_POS, BORDER_BOX + OBSTACLE_BOX):
+            if(p[0] - b[0] - MIN_DISTANCE <= x <= p[0] + b[0] + MIN_DISTANCE
+                    and p[1] - b[1] - MIN_DISTANCE <= y <= p[1] + b[1] + MIN_DISTANCE):
+                flag = False
+                break
+        return flag
+
 
 if __name__ == '__main__':
     m = ICRAMap()
