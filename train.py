@@ -21,6 +21,7 @@ random.seed(seed)
 
 env = ICRAField()
 agent = DQNAgent()
+agent.load('attack.model')
 agent2 = HandAgent()
 episode_durations = []
 
@@ -57,7 +58,7 @@ for i_episode in range(num_episodes):
     # Update the target network, copying all weights and biases in DQN
     if i_episode % TARGET_UPDATE == 0:
         agent.update_target_net()
-        agent.save(filter='tu', model_name='attack.model')
+        agent.save(filter='tu', model_name='defend_0.model')
 
 print('Complete')
 env.close()

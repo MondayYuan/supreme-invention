@@ -32,6 +32,6 @@ class HandAgent():
         new_action = self.move.MoveTo(pos, vel, angle, action)
 
         #robot_0 attacks and robot_1 fobidden to shoot
-        new_action[4] = 0.0
+        # new_action[4] = 0.0
 
         return new_action

@@ -57,6 +57,11 @@ class DQN(nn.Module):
         self.sigmoid_sj = nn.Sequential(
             nn.Linear(24, 4),
             nn.Sigmoid()
+
+            #0:attack
+            #1:defend
+            #2:idle
+            #3:defend buff
         )
 
         self.fc4_tu = nn.Sequential(
@@ -90,7 +95,8 @@ class DQN(nn.Module):
         x_sj = torch.cat((map_feature_sj, state), 1) # b * 35
         x_sj = self.fc2_sj(x_sj) # b * 16
         y_sj = self.fc3_sj(x_sj) # b * 8
-        x_sj = self.sigmoid_sj(torch.cat((x_sj, y_sj), 1)) # b* 3
+        x_sj = self.sigmoid_sj(torch.cat((x_sj, y_sj), 1)) # b* 4
+
 
         #TU
         x_tu = self.cnn_tu(self.map).view(-1)  # 280
@@ -106,8 +112,16 @@ class DQN(nn.Module):
         #merge
         # value_map = x_tu[:,torch.max(x_sj, 1)[1],:,:]
 
+        # 0:attack
+        # 1:defend
+        # 2:idle
+        # 3:defend buff
+
         #attack only
-        value_map = x_tu[:, 0, :, :].reshape(batch_size, 1, 9, 9)
+        #value_map = x_tu[:, 0, :, :].reshape(batch_size, 1, 9, 9)
+
+        #defend only
+        value_map = x_tu[:, 1, :, :].reshape(batch_size, 1, 9, 9)
 
 
         return value_map

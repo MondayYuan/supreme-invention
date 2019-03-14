@@ -70,7 +70,8 @@ class DQNAgent():
         device = self.device
         action = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         if state[-1] > 0 and state[-3] > 0:
-            action[4] = +1.0
+            # action[4] = +1.0
+            action[4] = 0.0
         else:
             action[4] = 0.0
 

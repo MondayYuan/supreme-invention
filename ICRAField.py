@@ -233,18 +233,33 @@ class ICRAField(gym.Env, EzPickle):
         ###### reward ######
         step_reward = 0
         done = False
+        # # First step without action, called from reset()
+        # if self.actions["robot_0"] is not None:
+        #     self.reward = self.robots["robot_0"].health - \
+        #         self.robots["robot_1"].health
+        #     self.reward -= 0.5 * self.t * FPS
+        #     step_reward = self.reward - self.prev_reward
+        #     if self.robots["robot_0"].health <= 0:
+        #         done = True
+        #         step_reward -= 1000
+        #     if self.robots["robot_1"].health <= 0:
+        #         done = True
+        #         step_reward += 1000
+        #     self.prev_reward = self.reward
+
         # First step without action, called from reset()
+        #defend only
         if self.actions["robot_0"] is not None:
             self.reward = self.robots["robot_0"].health - \
-                self.robots["robot_1"].health
-            self.reward -= 0.5 * self.t * FPS
+                          self.robots["robot_1"].health
+            # self.reward += 0.5 * self.t * FPS
             step_reward = self.reward - self.prev_reward
             if self.robots["robot_0"].health <= 0:
                 done = True
-                step_reward -= 1000
+                step_reward -= 10000
             if self.robots["robot_1"].health <= 0:
                 done = True
-                step_reward += 1000
+                step_reward += 10000
             self.prev_reward = self.reward
 
         return self.getStateArray("robot_0"), step_reward, done, {}
