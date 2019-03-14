@@ -4,6 +4,9 @@ import torch.optim as optim
 import torch.nn.functional as F
 from Referee.ICRAMap import ICRAMap
 
+WIDTH_VALUE_MAP = 80
+HEIGHT_VALUE_MAP = 50
+
 class DQN(nn.Module):
     def __init__(self):
         super(DQN, self).__init__()
@@ -70,9 +73,10 @@ class DQN(nn.Module):
         )
 
         self.dconv_tu = nn.Sequential(
-            nn.ConvTranspose2d(1, 1, kernel_size=(3, 3)),  # 5x5 -> 7x7
+            nn.ConvTranspose2d(1, 4, kernel_size=(3, 3)),  # 5x5 -> 4x7x7
             nn.LeakyReLU(),
-            nn.ConvTranspose2d(1, 3, kernel_size=(3, 3)),  # 7x7 -> 3x9x9
+            nn.ConvTranspose2d(4, 30, kernel_size=(4, 4), stride=3, padding=1),  #4x7x7 -> 30x20x20
+            nn.LeakyReLU()
         )
 
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -107,7 +111,8 @@ class DQN(nn.Module):
         y_tu = self.fc3_tu(x_tu) #b * 8
         x_tu = self.fc4_tu(torch.cat((x_tu, y_tu), 1)) # b * 25
         x_tu = x_tu.reshape(batch_size, 1, 5, 5) # b * 1 * 5 * 5
-        x_tu = self.dconv_tu(x_tu) # b * 3 * 9 * 9
+        x_tu = self.dconv_tu(x_tu) # b * 30 * 20 * 20
+        x_tu = x_tu.reshape(batch_size, 3, WIDTH_VALUE_MAP, HEIGHT_VALUE_MAP)
 
         #merge
         # value_map = x_tu[:,torch.max(x_sj, 1)[1],:,:]
@@ -121,8 +126,7 @@ class DQN(nn.Module):
         #value_map = x_tu[:, 0, :, :].reshape(batch_size, 1, 9, 9)
 
         #defend only
-        value_map = x_tu[:, 1, :, :].reshape(batch_size, 1, 9, 9)
-
+        value_map = x_tu[:, 1, :, :].reshape(batch_size, 1, WIDTH_VALUE_MAP, HEIGHT_VALUE_MAP)
 
         return value_map
 

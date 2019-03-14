@@ -22,6 +22,9 @@ EPS_START = 0.9
 EPS_END = 0.05
 EPS_DECAY = 200
 
+WIDTH_VALUE_MAP = 80
+HEIGHT_VALUE_MAP = 50
+
 Transition = namedtuple(
     'Transition', ('state', 'action', 'next_state', 'reward'))
 
@@ -91,8 +94,8 @@ class DQNAgent():
                 max_col_max, max_col_max_indice = col_max.max(dim=0)
                 y = max_col_max_indice.item()
                 x = col_max_indice[y].item()
-                x = x/9.0*8.0
-                y = y/9.0*5.0
+                x = x/WIDTH_VALUE_MAP*8.0
+                y = y/HEIGHT_VALUE_MAP*5.0
         else:
             x, y = random.random()*8.0, random.random()*5.0
 
